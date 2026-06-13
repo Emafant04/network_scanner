@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "../src/netutils.h"
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
@@ -27,7 +28,7 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in target;
     memset(&target, 0, sizeof(target));
     target.sin_family = AF_INET;
-    target.sin_port   = htons(port);
+    target.sin_port   = my_htons(port);
 
     if (inet_pton(AF_INET, argv[1], &target.sin_addr) <= 0) {
         fprintf(stderr, "Indirizzo IP non valido\n");
