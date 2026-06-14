@@ -1,6 +1,10 @@
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
 #include "../src/netutils.h"
 
 void test_my_htons() {
@@ -18,10 +22,37 @@ void test_my_htonl() {
 
     printf("my_htonl: OK\n");
 }
+void test_my_inet_pton() {
+    uint32_t my_result;
+    uint32_t ref_result;
+
+    // caso corretto — confronto binario con inet_pton
+    assert(my_inet_pton(AF_INET, "192.168.1.1", &my_result) == 1);
+    inet_pton(AF_INET, "192.168.1.1", &ref_result);
+    assert(my_result == ref_result);
+
+    // af non riconosciuto
+    assert(my_inet_pton(42, "192.168.1.1", &my_result) == -1);
+
+    // lettere al posto di numeri
+    assert(my_inet_pton(AF_INET, "192.abc.1.1", &my_result) == 0);
+
+    // numero fuori range
+    assert(my_inet_pton(AF_INET, "192.168.1.999", &my_result) == 0);
+
+    // stringa senza punti
+    assert(my_inet_pton(AF_INET, "192168011", &my_result) == 0);
+
+    // puntatore src NULL
+    assert(my_inet_pton(AF_INET, NULL, &my_result) == -1);
+
+    printf("my_inet_pton: OK\n");
+}
 
 int main() {
     test_my_htons();
     test_my_htonl();
+    test_my_inet_pton();
 
     printf("All tests passed.\n");
     return 0;
