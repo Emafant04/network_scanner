@@ -5,7 +5,6 @@
 
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <unistd.h>
 #include "../src/netutils.h"
 
@@ -30,7 +29,7 @@ int main(int argc, char *argv[]) {
     target.sin_family = AF_INET;
     target.sin_port   = my_htons(port);
 
-    if (inet_pton(AF_INET, argv[1], &target.sin_addr) <= 0) {
+    if (my_inet_pton(AF_INET, argv[1], &target.sin_addr) <= 0) {
         fprintf(stderr, "Indirizzo IP non valido\n");
         close(sockfd);
         return 1;
