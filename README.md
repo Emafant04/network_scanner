@@ -44,15 +44,16 @@ Compiles and runs the test suite (`tests/test_netutils.c`), comparing custom imp
 
 ## Current State
 
-### Phase 1.5 — netutils.c (done)
+### Phase 1 — netutils.c (done)
 
 Custom reimplementations of byte-order conversion functions, to replace `htons`/`htonl` and `inet_pton` from glibc.
 
 - `my_htons()` — done, verified against `htons` (manual check + test suite)
 - `my_htonl()` — done, verified against `htonl` (manual check + test suite)
 - `my_inet_pton()` — done, verified against `inet_pton` (manual check + test suite)
+- `my_memset()` — done, verified against `memset` (manual check + test suite) - memcmp
 - Test suite (`tests/test_netutils.c`) — done, all tests pass (`make test`)
-- Next: to be defined
+- Next: Phase 2
 
 ### Phase 1 — TCP Port Scanner (in development)
 

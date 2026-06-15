@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 
     // 2. Prepara l'indirizzo di destinazione
     struct sockaddr_in target;
-    memset(&target, 0, sizeof(target));
+    my_memset(&target, 0, sizeof(target));
     target.sin_family = AF_INET;
     target.sin_port   = my_htons(port);
 

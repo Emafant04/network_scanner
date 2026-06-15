@@ -61,3 +61,14 @@ int my_inet_pton(int af, const char *src, void *dst){
         return-1;
     }
 }
+
+void *my_memset(void *s, int c, size_t n){
+    size_t count=0;
+    unsigned char *p = (unsigned char *)s;
+    while(count<n){
+        *p=(unsigned char)c;
+        p++;
+        count++;
+    }
+    return s;
+}

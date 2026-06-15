@@ -48,11 +48,43 @@ void test_my_inet_pton() {
 
     printf("my_inet_pton: OK\n");
 }
+void test_my_memset() {
+    unsigned char my_buf[16];
+    unsigned char ref_buf[16];
+
+    // n = 0 — non deve scrivere nulla
+    my_buf[0] = 0xAA;
+    my_memset(my_buf, 0, 0);
+    assert(my_buf[0] == 0xAA);
+
+    // blocco piccolo con valore 0
+    my_memset(my_buf, 0, 4);
+    memset(ref_buf, 0, 4);
+    assert(memcmp(my_buf, ref_buf, 4) == 0);
+
+    // blocco grande con valore 0
+    my_memset(my_buf, 0, 16);
+    memset(ref_buf, 0, 16);
+    assert(memcmp(my_buf, ref_buf, 16) == 0);
+
+    // valore diverso da 0
+    my_memset(my_buf, 0xFF, 16);
+    memset(ref_buf, 0xFF, 16);
+    assert(memcmp(my_buf, ref_buf, 16) == 0);
+
+    // valore intermedio
+    my_memset(my_buf, 0x42, 16);
+    memset(ref_buf, 0x42, 16);
+    assert(memcmp(my_buf, ref_buf, 16) == 0);
+
+    printf("my_memset: OK\n");
+}
 
 int main() {
     test_my_htons();
     test_my_htonl();
     test_my_inet_pton();
+    test_my_memset();
 
     printf("All tests passed.\n");
     return 0;
