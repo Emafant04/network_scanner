@@ -12,16 +12,19 @@ The long-term goal is to gradually replace utility functions (address conversion
 
 ```
 .
-├── src/
-│   ├── port_scanner.c
-│   ├── netutils.c
-│   └── netutils.h
-├── tests/
-│   └── test_netutils.c
-├── bin/              # ignored by git
 ├── .gitignore
+├── LICENSE
 ├── Makefile
-└── README.md
+├── README.md
+├── .README.md.kate-swp
+├── src
+│   ├── netutils.c
+│   ├── netutils.h
+│   ├── port_scanner.c
+│   ├── scan.c
+│   └── scan.h
+└── tests
+    └── test_netutils.c
 ```
 
 ---
@@ -44,18 +47,16 @@ Compiles and runs the test suite (`tests/test_netutils.c`), comparing custom imp
 
 ## Current State
 
-### Phase 1 — netutils.c (done)
+### Phase 2 — setting the environment (in progress)
 
-Custom reimplementations of byte-order conversion functions, to replace `htons`/`htonl` and `inet_pton` from glibc.
+Extend the program to scan a range of ports on a single host, introducing timeout handling via `setsockopt()` or `select()`.
+-rearrange the structure of the program for a more scalable implementation
 
-- `my_htons()` — done, verified against `htons` (manual check + test suite)
-- `my_htonl()` — done, verified against `htonl` (manual check + test suite)
-- `my_inet_pton()` — done, verified against `inet_pton` (manual check + test suite)
-- `my_memset()` — done, verified against `memset` (manual check + test suite) - memcmp
-- Test suite (`tests/test_netutils.c`) — done, all tests pass (`make test`)
-- Next: Phase 2
+---
 
-### Phase 1 — TCP Port Scanner (in development)
+## Roadmap
+
+### Phase 1 — TCP Port Scanner 
 
 Minimal program that attempts a TCP connection to a single host and port, returning whether the port is open or closed.
 
@@ -82,14 +83,43 @@ nc -l -p 1234
 ./bin/port_scanner 127.0.0.1 9999   # closed
 ```
 
----
+#### — netutils.c (done)
 
-## Roadmap
+Custom reimplementations of byte-order conversion functions, to replace `htons`/`htonl` and `inet_pton` from glibc.
 
-### Phase 2 — Port range scanning
+- `my_htons()` — done, verified against `htons` (manual check + test suite)
+- `my_htonl()` — done, verified against `htonl` (manual check + test suite)
+- `my_inet_pton()` — done, verified against `inet_pton` (manual check + test suite)
+- `my_memset()` — done, verified against `memset` (manual check + test suite) - memcmp
+- Test suite (`tests/test_netutils.c`) — done, all tests pass (`make test`)
+
+
+### Phase 2 — Port range scanning(in progress)
 Extend the program to scan a range of ports on a single host, introducing timeout handling via `setsockopt()` or `select()`.
 
-**Custom implementation planned:** `htons()`, `inet_pton()`.
+**Concepts covered:**
+- "Drop vs Reject" as a response from a firewall
+
+**Usage:**
+```bash
+./bin/port_scanner <ip> <port>
+./bin/port_scanner 127.0.0.1 1-1000
+```
+
+**Local testing:**
+```bash
+# Terminal 1 — open a dummy server
+nc -l -p 999
+
+# Terminal 2 — run the scanner
+./bin/port_scanner 127.0.0.1 1-1000   # port 999 open
+
+Refactoring: Scan logic extracted in scan_port() in scan.c/scan.h
+Defined port states: PORT_OPEN, PORT_CLOSED, PORT_FILTERED, PORT_ERROR
+Non-blocking socket with fcntl() + O_NONBLOCK — implemented
+Timeout handling with select() — in progress
+Port range parsing in main — not yet implemented
+
 
 ### Phase 3 — Threading
 Make the scan parallel to reduce execution time, introducing `pthread` and concurrency management.
