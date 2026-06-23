@@ -113,6 +113,7 @@ nc -l -p 999
 
 # Terminal 2 — run the scanner
 ./bin/port_scanner 127.0.0.1 1-1000   # port 999 open
+```
 
 Refactoring: Scan logic extracted in scan_port() in scan.c/scan.h
 Defined port states: PORT_OPEN, PORT_CLOSED, PORT_FILTERED, PORT_ERROR
