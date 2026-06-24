@@ -47,10 +47,14 @@ Compiles and runs the test suite (`tests/test_netutils.c`), comparing custom imp
 
 ## Current State
 
-### Phase 2 — setting the environment (in progress)
+### Phase 2 — — scan.c (in progress)
 
 Extend the program to scan a range of ports on a single host, introducing timeout handling via `setsockopt()` or `select()`.
 -rearrange the structure of the program for a more scalable implementation
+
+- `scan_port()` — done(to be tested)
+- `parse_range()` — done(to be tested)
+
 
 ---
 
@@ -99,6 +103,11 @@ Extend the program to scan a range of ports on a single host, introducing timeou
 
 **Concepts covered:**
 - "Drop vs Reject" as a response from a firewall
+- Refactoring: Scan logic extracted in scan_port() in scan.c/scan.h
+- Defined port states: PORT_OPEN, PORT_CLOSED, PORT_FILTERED, PORT_ERROR
+- Non-blocking socket with fcntl() + O_NONBLOCK 
+- Timeout handling with select() 
+- Port range parsing 
 
 **Usage:**
 ```bash
@@ -114,12 +123,6 @@ nc -l -p 999
 # Terminal 2 — run the scanner
 ./bin/port_scanner 127.0.0.1 1-1000   # port 999 open
 ```
-
-Refactoring: Scan logic extracted in scan_port() in scan.c/scan.h
-Defined port states: PORT_OPEN, PORT_CLOSED, PORT_FILTERED, PORT_ERROR
-Non-blocking socket with fcntl() + O_NONBLOCK — implemented
-Timeout handling with select() — in progress
-Port range parsing in main — not yet implemented
 
 
 ### Phase 3 — Threading

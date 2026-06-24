@@ -37,3 +37,42 @@ int scan_port(char *ip, int port){
     int result = connect(sockfd, (struct sockaddr *)&target, sizeof(target));
     return result;
 }
+
+int parse_range(char *range, int *start, int *end){
+    int countp=1;
+    *start = 0;
+    *end = 0;
+    if(range == NULL){
+        return -1;
+    }
+    while(*range != '\0'){
+        if(*range=='-'){
+            countp++;
+        }
+        if('0'<=*range && *range<='9'){
+            switch(countp){
+                case 1:(*start) = (*start) * 10 + (*range - '0');
+                break;
+                case 2:(*end) = (*end) * 10 + (*range - '0');
+                break;
+            }
+        }
+        if(*range!='-'&& !('0'<=*range && *range<='9')){
+            return -1;
+        }
+        range++;
+    }
+    if(countp == 1){
+        *end=*start;
+        return 0;
+    }else if(countp == 2){
+        if(*end==0){
+            *end = 65535;
+        }if(*end < *start){
+            return -1;
+        }
+        return 0;
+    }else{
+        return -1;
+    }
+}

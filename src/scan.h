@@ -8,4 +8,6 @@
 
 int scan_port(char *ip, int port);
 
+int parse_range(char *range, int *start, int *end);
+
 #endif
