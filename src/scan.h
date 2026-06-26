@@ -1,5 +1,6 @@
 #ifndef SCAN_H
 #define SCAN_H
+#include "netutils.h"
 
 #define PORT_OPEN     0
 #define PORT_CLOSED   1

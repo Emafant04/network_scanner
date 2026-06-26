@@ -1,3 +1,5 @@
+#include "scan.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,7 +9,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#include "../src/netutils.h"
+#include "netutils.h"
 
 int scan_port(char *ip, int port){
 
@@ -18,8 +20,8 @@ int scan_port(char *ip, int port){
         return PORT_ERROR;;
     }
 
-    int flags = fcntl(sockfd, F_GETFL, 0);   // leggi i flag attuali
-    fcntl(sockfd, F_SETFL, flags | O_NONBLOCK); // aggiungi O_NONBLOCK
+    //int flags = fcntl(sockfd, F_GETFL, 0);
+    //fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
     // 2. Prepara l'indirizzo di destinazione
     struct sockaddr_in target;
@@ -30,7 +32,7 @@ int scan_port(char *ip, int port){
     if (my_inet_pton(AF_INET, ip, &target.sin_addr) <= 0) {
         fprintf(stderr, "Indirizzo IP non valido\n");
         close(sockfd);
-        return PORT_ERROR;;
+        return PORT_ERROR;
     }
 
     // 3. Tenta la connessione

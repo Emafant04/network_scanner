@@ -1,6 +1,7 @@
 #include <stdint.h>
-#ifndef SCAN_H
-#define SCAN_H
+#include <stddef.h>
+#ifndef NETUTILS_H
+#define NETUTILS_H
 
 uint16_t my_htons(uint16_t hostshort);
 
