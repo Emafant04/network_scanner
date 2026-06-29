@@ -20,8 +20,8 @@ int scan_port(char *ip, int port){
         return PORT_ERROR;;
     }
 
-    //int flags = fcntl(sockfd, F_GETFL, 0);
-    //fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+    int flags = fcntl(sockfd, F_GETFL, 0);
+    fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
     // 2. Prepara l'indirizzo di destinazione
     struct sockaddr_in target;
@@ -37,7 +37,49 @@ int scan_port(char *ip, int port){
 
     // 3. Tenta la connessione
     int result = connect(sockfd, (struct sockaddr *)&target, sizeof(target));
-    return result;
+    if(result==0){
+        close(sockfd);
+        return PORT_OPEN;
+    }else if(result==-1){
+        if(errno == EINPROGRESS){
+            fd_set writefds;
+            FD_ZERO(&writefds);
+            FD_SET(sockfd, &writefds);
+
+            struct timeval tv;
+            tv.tv_sec  = 2;
+            tv.tv_usec = 0;
+
+            int sel = select(sockfd + 1, NULL, &writefds, NULL, &tv);
+
+            if(sel==0){
+                close(sockfd);
+                return PORT_FILTERED;
+            }
+            if(sel<0){
+                close(sockfd);
+                return PORT_ERROR;
+            }
+            if(sel>0){
+                int err;
+                socklen_t len = sizeof(err);
+                getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &err, &len);
+                if(err==0){
+                    close(sockfd);
+                    return PORT_OPEN;
+                }else if(err != 0){
+                    close(sockfd);
+                    return PORT_CLOSED;
+                }
+            }
+        }
+        if(errno == ECONNREFUSED){
+            close(sockfd);
+            return PORT_CLOSED;
+        }
+        close(sockfd);
+        return PORT_ERROR;
+    }
 }
 
 int parse_range(char *range, int *start, int *end){
