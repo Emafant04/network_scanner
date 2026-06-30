@@ -4,12 +4,13 @@
 #include "../src/scan.h"
 #include "../src/netutils.h"
 
-/*static void test_scan_port(void) {
-
-    assert(scan_port("not_an_ip", 80) == PORT_ERROR);
-
-    printf("scan_port: ok\n");
-} */
+static void test_scan_port(void) {
+    printf("--- scan_port manual tests ---\n");
+    printf("open port     127.0.0.1:1234 : %d (expected %d)\n", scan_port("127.0.0.1", 1234), PORT_OPEN);
+    printf("closed port   127.0.0.1:9999 : %d (expected %d)\n", scan_port("127.0.0.1", 9999), PORT_CLOSED);
+    printf("invalid ip    not_an_ip:80   : %d (expected %d)\n", scan_port("not_an_ip", 80),    PORT_ERROR);
+    printf("--- end scan_port tests ---\n");
+}
 
 static void test_parse_range(void) {
     int start, end;
@@ -33,7 +34,7 @@ static void test_parse_range(void) {
 
 int main(void) {
     test_parse_range();
-    //test_scan_port();
+    test_scan_port();
 
     printf("All tests passed.\n");
     return 0;

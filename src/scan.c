@@ -72,6 +72,8 @@ int scan_port(char *ip, int port){
                     return PORT_CLOSED;
                 }
             }
+            close(sockfd);
+            return PORT_ERROR;
         }
         if(errno == ECONNREFUSED){
             close(sockfd);
@@ -80,6 +82,8 @@ int scan_port(char *ip, int port){
         close(sockfd);
         return PORT_ERROR;
     }
+    close(sockfd);
+    return PORT_ERROR;
 }
 
 int parse_range(char *range, int *start, int *end){

@@ -12,7 +12,7 @@ TEST_SCAN_TARGET = bin/test_scan
 
 all: $(TARGET)
 
-$(TARGET): $(SRC)
+$(TARGET): $(SRC) | bin
 	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
 
 test: $(TEST_NETUTILS_TARGET) $(TEST_SCAN_TARGET)
@@ -27,5 +27,8 @@ $(TEST_SCAN_TARGET): $(TEST_SCAN_SRC)
 
 clean:
 	rm -f $(TARGET) $(TEST_NETUTILS_TARGET) $(TEST_SCAN_TARGET)
+
+bin:
+	mkdir -p bin
 
 .PHONY: all test clean
