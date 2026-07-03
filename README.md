@@ -48,14 +48,9 @@ Compiles and runs the test suites:
  
 ## Current State
  
-### Phase 2 — scan.c (in progress)
- 
-Extend the program to scan a range of ports on a single host, introducing timeout handling via `select()`.
- 
-- `scan_port()` — done, manually tested (requires `nc -l -p 1234` running in another terminal)
-- `parse_range()` — done, tested with automatic `assert` (single port, range, open range, NULL, invalid characters, inverted range)
-- Test suite (`tests/test_scan.c`) — done, all tests pass (`make test`)
-- **Next:** integrate `parse_range()` and `scan_port()` into the main (`port_scanner.c`), with a loop over the port range
+### Phase 3 — (to do)
+
+- **Next:** phase3
 ---
  
 ## Roadmap
@@ -97,7 +92,7 @@ Custom reimplementations of byte-order conversion functions, to replace `htons`/
 - Test suite (`tests/test_netutils.c`) — done, all tests pass (`make test`)
 ---
  
-### Phase 2 — Port range scanning (in progress)
+### Phase 2 — Port range scanning (completed)
  
 Extend the program to scan a range of ports on a single host, introducing timeout handling via `select()`.
  
@@ -128,6 +123,16 @@ nc -l -p 999
 # Terminal 2 — run the scanner
 ./bin/port_scanner 127.0.0.1 1-1000   # port 999 open
 ```
+#### scan.c(completed)
+ 
+Extend the program to scan a range of ports on a single host, introducing timeout handling via `select()`.
+ 
+- `scan_port()` — done, manually tested (requires `nc -l -p 1234` running in another terminal)
+- `parse_range()` — done, tested with automatic `assert` (single port, range, open range, NULL, invalid characters, inverted range)
+- Test suite (`tests/test_scan.c`) — done, all tests pass (`make test`)
+- main implementationt - done, manually tested
+- **Next:** phase3
+---
  
 ### Phase 3 — Threading
 Make the scan parallel to reduce execution time, introducing `pthread` and concurrency management.

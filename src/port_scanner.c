@@ -11,23 +11,24 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int port = atoi(argv[2]);
-
+    char *range = argv[2];
     char *ip = argv[1];
+    int start_port=0;
+    int end_port=0;
 
-    int result = scan_port(ip, port);
-
-    if (result == 0) {
-        printf("Porta %d aperta\n", port);
-    } else {
-        if (errno == ECONNREFUSED){
-            printf("Porta %d chiusa\n", port);
-        } else
-          if(errno == EINPROGRESS){
-
-          }
+    int ports=parse_range(range,&start_port,&end_port);
+    if(ports==0){
+        int i = start_port;
+        int j = end_port;
+        while(i <= j){
+            if(scan_port(ip,i)==PORT_OPEN){
+                printf("%d PORTA APERTA\n",i);
+            }
+            i++;
+        }
+    }else{
+        printf("errore nel parsing delle porte\n");
     }
 
-    close(sockfd);
     return 0;
 }
