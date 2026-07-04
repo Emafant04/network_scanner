@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 
 #include "../src/scan.h"
 
@@ -16,18 +17,28 @@ int main(int argc, char *argv[]) {
     int start_port=0;
     int end_port=0;
 
+    struct timespec start, end;
+
     int ports=parse_range(range,&start_port,&end_port);
     if(ports==0){
         int i = start_port;
         int j = end_port;
+        clock_gettime(CLOCK_MONOTONIC, &start);
         while(i <= j){
-            if(scan_port(ip,i)==PORT_OPEN){
-                printf("%d PORTA APERTA\n",i);
+            int status = scan_port(ip, i);
+            if(status == PORT_OPEN){
+                printf("%d PORT OPEN\n", i);
+            } else if(status == PORT_FILTERED){
+                printf("%d PORT FILTERED\n", i);
             }
             i++;
         }
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        double elapsed = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+        printf("Time: %.3f seconds\n", elapsed);
+        fflush(stdout);
     }else{
-        printf("errore nel parsing delle porte\n");
+        printf("parsing range error\n");
     }
 
     return 0;
