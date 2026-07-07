@@ -186,7 +186,20 @@ Half-open scan: manually craft a TCP packet using raw sockets, send only the SYN
 | TCP header and checksum | SYN scan in phase 7 |
  
 ---
+## Benchmarks
+
+### Phase 2 vs Phase 3 — Sequential vs Threaded scan
+
+Test environment: `127.0.0.1`, range `60000-60100` (101 ports), 15 filtered ports (iptables DROP), timeout 2s per port.
+
+| Version | Time |
+|---|---|
+| Sequential (Phase 2) | 30.028s |
+| Threaded (Phase 3) | TBD |
+
+Reproduce with: `sudo ./scripts/benchmark.sh`
  
+---
 ## Environment
  
 - **OS:** Linux
