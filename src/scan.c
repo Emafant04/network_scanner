@@ -124,3 +124,16 @@ int parse_range(char *range, int *start, int *end){
         return -1;
     }
 }
+
+void *scan_thread(void *arg) {
+    thread_args *args = (thread_args *)arg;
+    int status = scan_port(args->ip,args->port);
+    pthread_mutex_lock(args->mutex);
+    if(status == PORT_OPEN)
+        printf("%d PORT OPEN\n", args->port);
+    else if(status == PORT_FILTERED)
+        printf("%d PORT FILTERED\n", args->port);
+    pthread_mutex_unlock(args->mutex);
+    sem_post(args->semaphore);
+    return NULL;
+}

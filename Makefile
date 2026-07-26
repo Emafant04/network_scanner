@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
+CFLAGS = -Wall -Wextra -O2 -lpthread
 
 SRC = src/port_scanner.c src/netutils.c src/scan.c
 TARGET = bin/port_scanner
