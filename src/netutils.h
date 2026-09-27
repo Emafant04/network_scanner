@@ -11,4 +11,6 @@ int my_inet_pton(int af, const char *src, void *dst);
 
 void *my_memset(void *s, int c, size_t n);
 
+uint16_t checksum(void *data, int len);
+
 #endif

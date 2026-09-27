@@ -72,3 +72,25 @@ void *my_memset(void *s, int c, size_t n){
     }
     return s;
 }
+
+uint16_t checksum(void *data, int len) {
+    uint16_t *ptr = (uint16_t *)data;
+    uint32_t sum = 0;
+
+    while (len > 1) {
+        sum += *ptr++;
+        len -= 2;
+    }
+
+    // se c'è un byte rimasto (lunghezza dispari)
+    if (len == 1) {
+        sum += *(uint8_t *)ptr;
+    }
+
+    // riporto circolare
+    while (sum >> 16) {
+        sum = (sum & 0xFFFF) + (sum >> 16);
+    }
+
+    return ~sum;
+}
