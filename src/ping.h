@@ -2,6 +2,7 @@
 #define PING_H
 
 #include <stdint.h>
+#include <stddef.h>
 #include "netutils.h"
 
 typedef struct {
@@ -19,5 +20,6 @@ typedef struct {
 
 int ping_host(char *ip);
 host_list ping_sweep(char *subnet, int cidr);
+uint16_t icmp_checksum(const void *data, size_t len);
 
 #endif
